@@ -1,1 +1,2 @@
-rootProject.name = 'Usuarios'
+rootProject.name = "MicroServicioUsuarios"
+include("Usuarios")
