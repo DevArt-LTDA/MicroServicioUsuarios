@@ -1,14 +1,22 @@
+# Use the Eclipse temurin alpine official image
+# https://hub.docker.com/_/eclipse-temurin
 FROM eclipse-temurin:21-jdk-alpine
-
-# Carpeta base dentro del contenedor
-WORKDIR /DEVART
-
-# Copiar todo el repo
+ 
+ 
+# Create and change to the app directory.
+WORKDIR /app
+ 
+ 
+# Copy local code to the container image.
 COPY . ./
-
-# Ya estás en la raíz del proyecto Gradle (donde está gradlew)
-# Construir solo el módulo Usuarios
-RUN ./gradlew :Usuarios:bootJar -x test
-
-# Ejecutar el JAR del módulo Usuarios
-CMD ["sh", "-c", "java -jar Usuarios/build/libs/*.jar"]
+ 
+ 
+# Build the app.
+# RUN ./mvnw -DoutputFile=target/mvn-dependency-list.log -B -DskipTests clean dependency:list install
+RUN ./gradlew clean build -x test
+ 
+ 
+# Run the app by dynamically finding the JAR file in the target directory
+# CMD ["sh", "-c", "java -jar target/*.jar"]
+CMD ["sh", "-c", "java -jar build/libs/njdemo-0.0.1-SNAPSHOT.jar"]
+ 
