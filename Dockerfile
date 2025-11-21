@@ -1,22 +1,23 @@
-# Use the Eclipse temurin alpine official image
-# https://hub.docker.com/_/eclipse-temurin
+# Usar la imagen oficial de Eclipse Temurin
 FROM eclipse-temurin:21-jdk-alpine
- 
- 
-# Create and change to the app directory.
+
+# Directorio de trabajo dentro del contenedor
 WORKDIR /app
- 
- 
-# Copy local code to the container image.
-COPY . ./
- 
- 
-# Build the app.
-# RUN ./mvnw -DoutputFile=target/mvn-dependency-list.log -B -DskipTests clean dependency:list install
+
+# Copiar SOLO lo necesario explícitamente
+COPY gradlew ./gradlew
+COPY gradle ./gradle
+COPY build.gradle settings.gradle ./
+COPY src ./src
+
+# Ver para depurar qué hay en /app
+RUN ls -la
+
+# Dar permiso de ejecución al wrapper de Gradle
+RUN chmod +x gradlew
+
+# Construir el proyecto (sin tests)
 RUN ./gradlew clean build -x test
- 
- 
-# Run the app by dynamically finding the JAR file in the target directory
-# CMD ["sh", "-c", "java -jar target/*.jar"]
-CMD ["sh", "-c", "java -jar build/libs/njdemo-0.0.1-SNAPSHOT.jar"]
- 
+
+# Ejecutar el JAR generado (coge el único JAR de build/libs)
+CMD ["sh", "-c", "java -jar build/libs/*.jar"]
