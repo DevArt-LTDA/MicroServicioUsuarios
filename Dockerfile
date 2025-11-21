@@ -1,11 +1,14 @@
-# Usar la imagen oficial de Eclipse Temurin
+# Usar la imagen oficial de Eclipse Temurin (Java 21)
 FROM eclipse-temurin:21-jdk-alpine
 
-# Directorio de trabajo dentro del contenedor
+# Directorio base dentro del contenedor
 WORKDIR /app
 
-# Copiar TODO el proyecto del módulo Usuarios
+# Copiar todo el repo al contenedor
 COPY . ./
+
+# Ir al módulo Usuarios (donde está gradlew, build.gradle, src, etc.)
+WORKDIR /app/Usuarios
 
 # Dar permiso de ejecución al wrapper de Gradle
 RUN chmod +x gradlew
